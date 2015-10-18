@@ -1,13 +1,15 @@
 @board = {"a1" => "A1", "a2" => "A2", "a3" => "A3", "b1" => "B1", "b2" => "B2", "b3" => "B3", "c1" => "C1", "c2" => "C2", "c3" => "C3"}
+#Using a hash allows the program to search for all keys with the same value, which is how the #recognize_win method functions
 @board_array = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"]
+#Every time a play is made the corresponding string is removed from board_array, allowing the computer to choose only from open squares
 
-def display_board
+def display_board #just makes the board visible to user
   puts "#{@board["a1"]} #{@board["a2"]} #{@board["a3"]}" 
   puts "#{@board["b1"]} #{@board["b2"]} #{@board["b3"]}" 
   puts "#{@board["c1"]} #{@board["c2"]} #{@board["c3"]}" 
 end
 
-def mark_board(player)
+def mark_board(player) #accepts an argument of either X or O for 2-player, removes string from array for playing computer, marks players selection on board
   puts "Player #{player}: Type the location you would like to mark."
   answer = gets.chomp
   @board[answer.downcase] = "#{player} "
@@ -16,7 +18,7 @@ def mark_board(player)
 end
 
 
-def mark_board_computer_easy
+def mark_board_computer_easy #this method only allows the computer to select a random unused square - working on developing a more thoughtful computer method
   puts "Computer marks with an O"
   move = @board_array.sample
   @board[move] = "O "
@@ -24,7 +26,9 @@ def mark_board_computer_easy
   display_board
 end 
 
-def recognize_win(player)
+def recognize_win(player) #used to break loop if a player has won. 
+  #To be honest I'm not totally happy with this - it works, but it also seems unnecessarily long
+  #Would rather it could recognize patterns but have not been able to figure out how to make a table and make it recognize three in a row
   win_array = []
   @board.select {|key, value| win_array << key if value == "#{player} "}
   if win_array.include?("a1") && win_array.include?("a2") && win_array.include?("a3")
@@ -49,7 +53,9 @@ end
 
 
 
-def play_2_player
+def play_2_player #method for 2 player game
+  #ends if player wins or all nine places used
+  #again, feel it is unnecessarily long and repetitive - working on simplifying
 display_board
 counter = 0
 loop do
@@ -66,7 +72,8 @@ counter+=1
 end 
 end
 
-def play_computer_easy
+def play_computer_easy #nearly identical to 2 player method except uses #mark_board_computer method
+  #again, working to possibly simplify/combine methods as they are nearly the same
   display_board
   counter = 0
 loop do
@@ -83,11 +90,12 @@ uts "GAME OVER. Computer wins!" if recognize_win("O") == true
 end
 end
 
-def greeting
+def greeting #initiates game with user - is the only method that needs to be called for all other methods to run
 puts "Would you like to play Tic Tac Toe? (yes/no)"
 answer = gets.chomp.downcase
 if answer.include? "no"
-  puts "Fine, whatever."
+  puts "Fine, whatever.
+   I didn't want to play with you anyway."
 elsif answer.include? "yes"
   puts "Awesome!"
   player_or_comp
@@ -97,7 +105,7 @@ else
 end
 end
 
-def player_or_comp
+def player_or_comp #allows user to choose to play either computer or another person
   puts "Please type 1 to play the computer or 2 to play two-player."
   answer = gets.to_i
   if answer == 1
