@@ -26,6 +26,88 @@ def mark_board_computer_easy #this method only allows the computer to select a r
   display_board
 end 
 
+def mark_board_computer_hard
+  puts "Computer marks with an O"
+  if @board["a1"] == "X " && @board["a2"] == "X " && @board_array.include?("a3")
+    @board["a3"] = "O " 
+    @board_array.delete("a3")
+  elsif @board["a1"] == "X " && @board["a3"] == "X " && @board_array.include?("a2")
+    @board["a2"] = "O "
+    @board_array.delete("a2")
+  elsif @board["a2"] == "X " && @board["a3"] == "X " && @board_array.include?("a1")
+    @board["a1"] = "O "
+    @board_array.delete("a1")
+  elsif @board["b1"] == "X " && @board["b2"] == "X " && @board_array.include?("b3")
+    @board["b3"] = "O "
+    @board_array.delete("b3")
+  elsif @board["b1"] == "X " && @board["b3"] == "X " && @board_array.include?("b2")
+    @board["b2"] = "O "
+    @board_array.delete("b2")
+  elsif @board["b2"] == "X " && @board["b3"] == "X " && @board_array.include?("b1")
+    @board["b1"] = "O "
+    @board_array.delete("b1")
+  elsif @board["c1"] == "X " && @board["c2"] == "X " && @board_array.include?("c3")
+    @board["c3"] = "O "
+    @board_array.delete("c3")
+  elsif @board["c1"] == "X " && @board["c3"] == "X " && @board_array.include?("c2")
+    @board["c2"] = "O "
+    @board_array.delete("c2")
+  elsif @board["c2"] == "X " && @board["c3"] == "X " && @board_array.include?("c1")
+    @board["c1"] = "O "
+    @board_array.delete("c1")
+  elsif @board["a1"] == "X " && @board["b1"] == "X " && @board_array.include?("c1")
+    @board["c1"] = "O "
+    @board_array.delete("c1")
+  elsif @board["a1"] == "X " && @board["c1"] == "X " && @board_array.include?("b1")
+    @board["b1"] = "O "
+    @board_array.delete("b1")
+  elsif @board["b1"] == "X " && @board["c1"] == "X " && @board_array.include?("a1")
+    @board["a1"] = "O "
+    @board_array.delete("a1")
+  elsif @board["a2"] == "X " && @board["b2"] == "X " && @board_array.include?("c2")
+    @board["c2"] = "O "
+    @board_array.delete("c2")
+  elsif @board["a2"] == "X " && @board["c2"] == "X " && @board_array.include?("b2")
+    @board["b2"] = "O "
+    @board_array.delete("b2")
+  elsif @board["b2"] == "X " && @board["c2"] == "X " && @board_array.include?("a2")
+    @board["a2"] = "O "
+    @board_array.delete("a2")
+  elsif @board["a3"] == "X " && @board["b3"] == "X " && @board_array.include?("c3")
+    @board["c3"] = "O "
+    @board_array.delete("c3")
+  elsif @board["a3"] == "X " && @board["c3"] == "X " && @board_array.include?("b3")
+    @board["b3"] = "O "
+    @board_array.delete("b3")
+  elsif @board["b3"] == "X " && @board["c3"] == "X " && @board_array.include?("a3")
+    @board["a3"] = "O "
+    @board_array.delete("a3")
+  elsif @board["a1"] == "X " && @board["b2"] == "X " && @board_array.include?("c3")
+    @board["c3"] = "O "
+    @board_array.delete("c3")
+  elsif @board["a1"] == "X " && @board["c3"] == "X " && @board_array.include?("b2")
+    @board["b2"] = "O "
+    @board_array.delete("b2")
+  elsif @board["b2"] == "X " && @board["c3"] == "X " && @board_array.include?("a1")
+    @board["a1"] = "O "
+    @board_array.delete("a1")
+  elsif @board["a3"] == "X " && @board["b2"] == "X " && @board_array.include?("c1")
+    @board["c1"] = "O "
+    @board_array.delete("c1")
+  elsif @board["a3"] == "X " && @board["c1"] == "X " && @board_array.include?("b2")
+    @board["b2"] = "O "
+    @board_array.delete("b2")
+  elsif @board["b2"] == "X " && @board["c1"] == "X " && @board_array.include?("a3")
+    @board["a3"] = "O "
+    @board_array.delete("a3")
+  else move = @board_array.sample
+  @board[move] = "O "
+  @board_array.delete(move)
+end
+display_board
+end
+
+
 def recognize_win(player) #used to break loop if a player has won. 
   #To be honest I'm not totally happy with this - it works, but it also seems unnecessarily long
   #Would rather it could recognize patterns but have not been able to figure out how to make a table and make it recognize three in a row
@@ -90,6 +172,23 @@ uts "GAME OVER. Computer wins!" if recognize_win("O") == true
 end
 end
 
+def play_computer_hard
+   display_board
+  counter = 0
+loop do
+  mark_board("X")
+ puts "GAME OVER. You win!" if recognize_win("X") == true
+ break if recognize_win("X") == true 
+counter+=1
+puts "GAME OVER. Stalemate." if counter == 9
+break if counter == 9 
+mark_board_computer_hard
+uts "GAME OVER. Computer wins!" if recognize_win("O") == true
+  break if recognize_win("O") == true 
+  counter+=1
+end
+end
+
 def greeting #initiates game with user - is the only method that needs to be called for all other methods to run
 puts "Would you like to play Tic Tac Toe? (yes/no)"
 answer = gets.chomp.downcase
@@ -97,7 +196,6 @@ if answer.include? "no"
   puts "Fine, whatever.
    I didn't want to play with you anyway."
 elsif answer.include? "yes"
-  puts "Awesome!"
   player_or_comp
 else 
   puts "Sorry, I didn't understand your answer. Please try again."
@@ -106,10 +204,10 @@ end
 end
 
 def player_or_comp #allows user to choose to play either computer or another person
-  puts "Please type 1 to play the computer or 2 to play two-player."
+  puts "Awesome! Please type 1 to play the computer or 2 to play two-player."
   answer = gets.to_i
   if answer == 1
-    play_computer_easy
+    easy_or_hard
   elsif answer == 2
     play_2_player
   else "Sorry, I didn't understand your answer. Please try again."
@@ -117,4 +215,17 @@ def player_or_comp #allows user to choose to play either computer or another per
   end
 end
 
-greeting 
+def easy_or_hard
+  puts "Please type 1 to play on easy or 2 to play on hard."
+  answer = gets.to_i
+  if answer == 1
+    play_computer_easy
+  elsif answer == 2
+    play_computer_hard
+  else "Sorry, I didn't understand your answer. Please try again."
+    easy_or_hard
+  end
+end
+
+
+greeting
