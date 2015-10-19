@@ -11,10 +11,10 @@ end
 
 def mark_board(player) #accepts an argument of either X or O for 2-player, removes string from array for playing computer, marks players selection on board
   puts "Player #{player}: Type the location you would like to mark."
-  answer = gets.chomp
+  answer = gets.chomp.downcase
   if @board_array.include?(answer)
-    @board[answer.downcase] = "#{player} "
-    @board_array.delete(answer.downcase)
+    @board[answer] = "#{player} "
+    @board_array.delete(answer)
     display_board
   else 
     puts "I'm sorry, either that was an invalid entry or that spot has already been taken. Please try again."
@@ -23,13 +23,14 @@ def mark_board(player) #accepts an argument of either X or O for 2-player, remov
 end
 
 
-def mark_board_computer_easy #this method only allows the computer to select a random unused square - working on developing a more thoughtful computer method
-  puts "Computer marks with an O"
+def mark_board_computer_easy 
+puts "Computer marks with an O"
   move = @board_array.sample
   @board[move] = "O "
   @board_array.delete(move)
-  display_board
-end 
+  display_board 
+end
+
 
 def mark_board_computer_hard
   puts "Computer marks with an O"
@@ -159,7 +160,7 @@ counter+=1
 end 
 end
 
-def play_computer_easy #nearly identical to 2 player method except uses #mark_board_computer method
+def play_computer #nearly identical to 2 player method except uses #mark_board_computer method
   #again, working to possibly simplify/combine methods as they are nearly the same
   display_board
   counter = 0
@@ -170,29 +171,14 @@ loop do
 counter+=1
 puts "STALEMATE. Game Over." if counter == 9
 break if counter == 9 
-mark_board_computer_easy
+yield #yields in #easy_or_hard to which play computer program is chosen
 uts "COMPUTER WINS! Game Over." if recognize_win("O") == true
   break if recognize_win("O") == true 
   counter+=1
 end
 end
 
-def play_computer_hard #identical to previous method except executes play on hard. Would like to combine two methods
-   display_board
-  counter = 0
-loop do
-  mark_board("X")
- puts "YOU WIN! Game Over." if recognize_win("X") == true
- break if recognize_win("X") == true 
-counter+=1
-puts "STALEMATE. Game Over." if counter == 9
-break if counter == 9 
-mark_board_computer_hard
-uts "COMPUTER WINS! Game Over." if recognize_win("O") == true
-  break if recognize_win("O") == true 
-  counter+=1
-end
-end
+
 
 def greeting #initiates game with user - is the only method that needs to be called for all other methods to run
 puts "Would you like to play Tic Tac Toe? (yes/no)"
@@ -224,9 +210,9 @@ def easy_or_hard #allows user to choose level to play
   puts "Please type 1 to play on easy or 2 to play on hard."
   answer = gets.to_i
   if answer == 1
-    play_computer_easy
+    play_computer {mark_board_computer_easy}
   elsif answer == 2
-    play_computer_hard
+    play_computer {mark_board_computer_hard}
   else "Sorry, I didn't understand your answer. Please try again."
     easy_or_hard
   end
