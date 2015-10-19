@@ -1,7 +1,7 @@
 @board = {"a1" => "A1", "a2" => "A2", "a3" => "A3", "b1" => "B1", "b2" => "B2", "b3" => "B3", "c1" => "C1", "c2" => "C2", "c3" => "C3"}
 #Using a hash allows the program to search for all keys with the same value, which is how the #recognize_win method functions
 @board_array = ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"]
-#Every time a play is made the corresponding string is removed from board_array, allowing the computer to choose only from open squares
+#Every time a play is made the corresponding string is removed from board_array, allowing the computer & user to choose only from open squares
 
 def display_board #just makes the board visible to user
   puts "#{@board["a1"]} #{@board["a2"]} #{@board["a3"]}" 
@@ -9,11 +9,11 @@ def display_board #just makes the board visible to user
   puts "#{@board["c1"]} #{@board["c2"]} #{@board["c3"]}" 
 end
 
-def mark_board(player) #accepts an argument of either X or O for 2-player, marks players selection on board
+def mark_board(player) #accepts an argument of either X or O for 2-player, marks player's selection on board
   puts "Player #{player}: Type the location you would like to mark."
   answer = gets.chomp.downcase
   if @board_array.include?(answer) #checks to make sure that the entry is valid and has not already been played
-    @board[answer] = "#{player} "
+    @board[answer] = "#{player} " #marks player's choice on board
     @board_array.delete(answer) #removes play from array of available spots
     display_board
     puts "PLAYER #{player} WINS! Game Over." if recognize_win("#{player}") == true
@@ -24,17 +24,19 @@ def mark_board(player) #accepts an argument of either X or O for 2-player, marks
 end
 
 
-def mark_board_computer_easy #the easy level just has the computer select a random location from array of unplayed spots
+def mark_board_computer_easy #the easy level just has the program select a random location from array of unplayed spots
 puts "Computer marks with an O"
-  move = @board_array.sample
-  @board[move] = "O "
-  @board_array.delete(move)
+  move = @board_array.sample #selects random spot
+  @board[move] = "O " #marks board
+  @board_array.delete(move) #deletes from available spots
   display_board 
   puts "COMPUTER WINS! Game Over." if recognize_win("O") == true
 end
 
 
-def mark_board_computer_hard
+def mark_board_computer_hard #to be honest I am not happy with this method 
+  #It works insofar as the program will block moves but it is EXTREMELY long and unwieldy, 
+  #and also only directs the program to prevent the user from winning, not to actually try to get three in a row
   puts "Computer marks with an O"
   if @board["a1"] == "X " && @board["a2"] == "X " && @board_array.include?("a3")
     @board["a3"] = "O " 
@@ -108,7 +110,7 @@ def mark_board_computer_hard
   elsif @board["b2"] == "X " && @board["c1"] == "X " && @board_array.include?("a3")
     @board["a3"] = "O "
     @board_array.delete("a3")
-  else move = @board_array.sample
+  else move = @board_array.sample #will default to random location if the user does not have two in a row
   @board[move] = "O "
   @board_array.delete(move)
 end
@@ -118,7 +120,7 @@ end
 
 
 def recognize_win(player) #used to break loop if a player has won. 
-  #To be honest I'm not totally happy with this - it works, but it also seems unnecessarily long
+  #Also not totally happy with this - it works, but it also seems unnecessarily long
   #Would rather it could recognize patterns but have not been able to figure out how to make a table and make it recognize three in a row
   win_array = []
   @board.select {|key, value| win_array << key if value == "#{player} "}
@@ -149,10 +151,10 @@ display_board
 counter = 0
 loop do
  mark_board("X")
- break if recognize_win("X") == true 
+ break if recognize_win("X") == true #breaks if player wins
 counter+=1
 puts "STALEMATE. Game Over" if counter == 9
-break if counter == 9 
+break if counter == 9 #will break if board is filled
 yield #yields to either #mark_board("O"), or easy/hard computer methods depending on choices made by user
   break if recognize_win("O") == true 
 counter+=1
@@ -175,12 +177,12 @@ end
 
 def player_or_comp #allows user to choose to play either computer or another person
   puts "Awesome! Please type 1 to play the computer or 2 to play two-player."
-  answer = gets.to_i
+  answer = gets.to_i #chose to use #to_i as it will automatically remove spaces
   if answer == 1
     easy_or_hard
   elsif answer == 2
     play_game {mark_board("O")}
-  else "Sorry, I didn't understand your answer. Please try again."
+  else puts "Sorry, I didn't understand your answer. Please try again."
     player_or_comp
   end
 end
@@ -192,7 +194,7 @@ def easy_or_hard #allows user to choose level to play
     play_game {mark_board_computer_easy}
   elsif answer == 2
     play_game {mark_board_computer_hard}
-  else "Sorry, I didn't understand your answer. Please try again."
+  else puts "Sorry, I didn't understand your answer. Please try again."
     easy_or_hard
   end
 end
