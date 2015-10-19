@@ -12,9 +12,14 @@ end
 def mark_board(player) #accepts an argument of either X or O for 2-player, removes string from array for playing computer, marks players selection on board
   puts "Player #{player}: Type the location you would like to mark."
   answer = gets.chomp
-  @board[answer.downcase] = "#{player} "
-  @board_array.delete(answer.downcase)
-  display_board
+  if @board_array.include?(answer)
+    @board[answer.downcase] = "#{player} "
+    @board_array.delete(answer.downcase)
+    display_board
+  else 
+    puts "I'm sorry, either that was an invalid entry or that spot has already been taken. Please try again."
+    mark_board(player)
+  end
 end
 
 
@@ -142,13 +147,13 @@ display_board
 counter = 0
 loop do
  mark_board("X")
- puts "GAME OVER. Player X wins!" if recognize_win("X") == true
+ puts "PLAYER X WINS! Game Over." if recognize_win("X") == true
  break if recognize_win("X") == true 
 counter+=1
-puts "GAME OVER. Stalemate." if counter == 9
+puts "STALEMATE. Game Over" if counter == 9
 break if counter == 9 
   mark_board("O")
-  puts "GAME OVER. Player O wins!" if recognize_win("O") == true
+  puts "PLAYER O WINS! Game Over." if recognize_win("O") == true
   break if recognize_win("O") == true 
 counter+=1
 end 
@@ -160,30 +165,30 @@ def play_computer_easy #nearly identical to 2 player method except uses #mark_bo
   counter = 0
 loop do
   mark_board("X")
- puts "GAME OVER. You win!" if recognize_win("X") == true
+ puts "YOU WIN! Game Over." if recognize_win("X") == true
  break if recognize_win("X") == true 
 counter+=1
-puts "GAME OVER. Stalemate." if counter == 9
+puts "STALEMATE. Game Over." if counter == 9
 break if counter == 9 
 mark_board_computer_easy
-uts "GAME OVER. Computer wins!" if recognize_win("O") == true
+uts "COMPUTER WINS! Game Over." if recognize_win("O") == true
   break if recognize_win("O") == true 
   counter+=1
 end
 end
 
-def play_computer_hard
+def play_computer_hard #identical to previous method except executes play on hard. Would like to combine two methods
    display_board
   counter = 0
 loop do
   mark_board("X")
- puts "GAME OVER. You win!" if recognize_win("X") == true
+ puts "YOU WIN! Game Over." if recognize_win("X") == true
  break if recognize_win("X") == true 
 counter+=1
-puts "GAME OVER. Stalemate." if counter == 9
+puts "STALEMATE. Game Over." if counter == 9
 break if counter == 9 
 mark_board_computer_hard
-uts "GAME OVER. Computer wins!" if recognize_win("O") == true
+uts "COMPUTER WINS! Game Over." if recognize_win("O") == true
   break if recognize_win("O") == true 
   counter+=1
 end
@@ -215,7 +220,7 @@ def player_or_comp #allows user to choose to play either computer or another per
   end
 end
 
-def easy_or_hard
+def easy_or_hard #allows user to choose level to play
   puts "Please type 1 to play on easy or 2 to play on hard."
   answer = gets.to_i
   if answer == 1
